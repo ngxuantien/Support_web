@@ -1,0 +1,185 @@
+﻿@model System.Data.DataTable
+@{
+    var reports = ViewData["Reports"] as System.Data.DataTable;
+    var controllerName  = ViewContext.RouteData.Values["controller"].ToString();
+    var actionName      = ViewContext.RouteData.Values["action"].ToString();
+}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>Supporting</title>
+     <link rel="stylesheet" href="..\Scripts\bootstrap.min.css">
+    <!----css3---->
+    <link rel="stylesheet" href="..\Scripts\custom.css">
+    <link rel="stylesheet" href="..\Content\Site.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="body-overlay"></div>
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3><a href="@Url.Action("main", "Home")"><img src="../images/image.png" class="img-fluid" /><span>tdmu support</span></a></h3>
+            </div>
+            <ul class="list-unstyled components">
+                <li class="active">
+                    <a href="@Url.Action("main", "Home")" class="dashboard"><i class="material-icons">dashboard</i><span>Tổng Quan</span></a>
+                </li>
+
+               <li class="dropdown">
+                            <a href="@Url.Action("testDevice", "Home")" >
+                                <i class="material-icons">aspect_ratio</i><span>Thiết bị</span></a>
+                        </li>
+
+                        <li class="dropdown">
+                            <a href="@Url.Action("Area", "Home")"  >
+                                <i class="material-icons">apps</i><span>Dãy</span></a>
+                        </li>
+
+                        <li class="dropdown">
+                            <a href="@Url.Action("Room", "Home")">
+                                <i class="material-icons">equalizer</i>
+                                <span>Phòng</span>
+                            </a>
+                        </li>
+
+                        <li class="dropdown">
+                            <a href="@Url.Action("Thongke", "Home")" >
+                                <i class="material-icons">extension</i><span>Thống kê</span></a>
+                        </li>
+
+                        <li class="dropdown">
+                            <a href="@Url.Action("Division", "Home")" >
+                                <i class="material-icons">border_color</i><span>Cần bảo trì</span></a>
+                        </li>
+            </ul>
+        </nav>
+
+        <!-- Page Content  -->
+        <div id="content">
+            <div class="top-navbar">
+                <nav class="navbar navbar-expand-lg">
+                    <div class="container-fluid">
+                        <button type="button" id="sidebarCollapse" class="d-xl-block d-lg-block d-md-none d-none">
+                            <span class="material-icons">arrow_back_ios</span>
+                        </button>
+
+                        <a class="navbar-brand" href="#">
+                            @if (controllerName == "Home" && actionName == "Division")
+                            {
+                                <text>QUẢN LÝ THIẾT BỊ HỎNG</text>
+                            }
+                            @if (controllerName == "Home" && actionName == "testDevice")
+                            {
+                                <text>QUẢN LÝ THIẾT BỊ</text>
+                            }
+                            @if (controllerName == "Home" && actionName == "Room")
+                            {
+                                <text>QUẢN LÝ PHÒNG</text>
+                            }
+                            @if (controllerName == "Home" && actionName == "Area")
+                            {
+                                <text>QUẢN LÝ DÃY PHÒNG</text>
+                            }
+                            @if (controllerName == "Home" && actionName == "main")
+                            {
+                                <text>TỔNG QUAN</text>
+                            }
+                            @if (controllerName == "Home" && actionName == "Thongke")
+                            {
+                                <text>THỐNG KÊ</text>
+                            }
+                        </a>
+
+                        <button class="d-inline-block d-lg-none ml-auto more-button" type="button"
+                            data-toggle="collapse" data-target="#navbarSupportedContent"
+                            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="material-icons">more_vert</span>
+                        </button>
+
+                        <div class="collapse navbar-collapse d-lg-block d-xl-block d-sm-none d-md-none d-none"
+                            id="navbarSupportedContent">
+                            <ul class="nav navbar-nav ml-auto">
+                                <li class="dropdown nav-item active" id="notificationSection">
+                                    @Html.Action("LoadNotifications", "Home")
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Logout", "Home")">
+                                        <span class="material-icons">logout</span>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">
+                                        <span class="material-icons">settings</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="main-content">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+        <script src="..\Scripts\jquery-3.3.1.slim.min.js"></script>
+        <script src="..\Scripts\popper.min.js"></script>
+        <script src="..\Scripts\bootstrap.min.js"></script>
+        <script src="..\Scripts\jquery-3.3.1.min.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#sidebarCollapse').on('click', function () {
+                    $('#sidebar').toggleClass('active');
+                    $('#content').toggleClass('active');
+                });
+            });
+        </script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            function reloadNotifications() {
+                $.ajax({
+                    url: '@Url.Action("LoadNotifications", "Home")',
+                    type: 'GET',
+                    success: function (data) {
+                        $('#notificationSection').html(data); // gọi id và xuất data
+                    }
+                });
+            }
+
+            reloadNotifications(); // load lần đầu
+            setInterval(reloadNotifications, 10000); // 10s reload 1 lần
+        </script>
+
+
+    <footer class="tdmu-footer">
+    <div class="container text-center">
+        <h5 class="footer-title">DỰ ÁN HỖ TRỢ QUẢN LÝ THIẾT BỊ - TDMU</h5>
+        <p>Nhóm thực hiện:</p>
+        <ul class="footer-members">
+            <li><i class="material-icons">person</i> Nguyễn Trung Kiên</li>
+            <li><i class="material-icons">person</i> Bùi Vinh Phúc</li>
+            <li><i class="material-icons">person</i> Nguyễn Xuân Tiến</li>
+        </ul>
+        <small class="copyright">© 2025 - Trường Đại học Thủ Dầu Một (TDMU)</small>
+    </div>
+</footer>
+
+
+
+</body>
+
+</html>

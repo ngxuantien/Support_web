@@ -1,0 +1,74 @@
+﻿@{
+    ViewData["Title"] = "Phân Công Công Việc";
+    Layout ="~/Views/Shared/_LayoutHome.cshtml" ;
+    var reports = ViewData["Reports"] as System.Data.DataTable;
+    var groups = ViewData["Groups"] as System.Data.DataTable;
+    int stt = 1;
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<table id="reportTable" class="table table-bordered">
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>Thiết Bị</th>
+            <th>Phòng</th>
+            <th>Mô Tả</th>
+            <th>Trạng Thái</th>
+            <th>Thời Gian Báo Cáo</th>
+            <th>Nhóm Xử Lý</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (System.Data.DataRow row in reports.Rows)
+        {
+            <tr>
+                <td>@stt</td>
+                <td>@row["name_device"]</td>
+                <td>@row["name_room"]</td>
+                <td>@row["description"]</td>
+                <td>@row["status"]</td>
+                <td>@Convert.ToDateTime(row["time_report"]).ToString("dd/MM/yyyy HH:mm")</td>
+                <td>
+                    <form method="post" action="@Url.Action("AssignReport", "Home")">
+                        <input type="hidden" name="reportId" value="@row["id"]" />
+                        <select name="groupId" class="form-control">
+                            @{
+                                // Nếu id_group là null hoặc DBNull, chọn "Chưa phân công"
+                                var isUnassigned = row["id_group"] == DBNull.Value;
+                                <option value="" selected="@isUnassigned">Chưa phân công</option>
+;
+                            }
+
+                            @foreach (System.Data.DataRow group in groups.Rows)
+                            {
+                                var selected = row["id_group"] != DBNull.Value && row["id_group"].ToString() == group["id"].ToString()
+                                    ? "selected"
+                                    : "";
+
+                                <option value="@group["id"]" @selected>@group["name"]</option>
+                            }
+                        </select>
+                        <button type="submit" class="btn btn-primary mt-1">Phân Công</button>
+                    </form>
+                </td>
+            </tr>
+            stt++;
+                                }
+
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+        $('#reportTable').DataTable();
+    });
+</script>

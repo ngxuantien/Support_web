@@ -1,0 +1,167 @@
+﻿@{
+    ViewBag.Title = "Thống kê thiết bị";
+    Layout = "~/Views/Shared/_LayoutHome.cshtml"; // nếu bạn có layout
+    int stt=1;
+    int stt2 = 1;
+    int stt3 = 1;
+}
+
+<h2>📊 Tổng số lần sửa chữa của từng thiết bị theo tháng</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>ID Thiết Bị</th>
+            <th>Tháng Sửa</th>
+            <th>Tổng Lần Sửa</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (System.Data.DataRow row in ViewBag.ThongKeSoLanSuaChua.Rows)
+        {
+            <tr>
+                <td>@stt</td>
+                <td>@row["name"]</td>
+                <td>@row["repair_month"]</td>
+                <td>@row["total_repairs"]</td>
+            </tr>
+        stt++;
+        }
+    </tbody>
+</table>
+
+<h2>🛠 Thời gian sửa trung bình từng thiết bị</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>ID Thiết Bị</th>
+            <th>Thời gian trung bình</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (System.Data.DataRow row in ViewBag.TrungBinhSuaTungThietBi.Rows)
+        {
+            <tr>
+                <td>@stt2</td>
+                <td>@row["name"]</td>
+                <td>@row["avg_time_formatted"]</td>
+            </tr>
+        stt2++;
+        }
+    </tbody>
+</table>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<h3>Biểu đồ: Tổng số lần sửa chữa theo tháng</h3>
+<canvas id="barChart" width="800" height="400"></canvas>
+
+<script>
+    // Lấy dữ liệu từ ViewBag (render thành JavaScript)
+    var labels = [];
+    var values = [];
+
+    @foreach (System.Data.DataRow row in ViewBag.ThongKeSoLanSuaChua.Rows)
+    {
+        @:labels.push('@(row["repair_month"])-ID@(row["id_device"])');
+        @:values.push(@row["total_repairs"]);
+    }
+
+    const ctx = document.getElementById('barChart').getContext('2d');
+    const barChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Tổng số lần sửa',
+                data: values,
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Số lần sửa'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Tháng - Thiết bị'
+                    }
+                }
+            }
+        }
+    });
+</script>
+<h3>Biểu đồ: Thời gian sửa chữa trung bình của từng thiết bị</h3>
+<canvas id="avgRepairTimeChart" width="800" height="400"></canvas>
+
+<script>
+    var labels2 = [];
+    var values2 = [];
+
+    @foreach (System.Data.DataRow row in ViewBag.TrungBinhSuaTungThietBi.Rows)
+    {
+        var avgTimeFormatted = row["avg_time_formatted"].ToString();
+        var idDevice = row["id_device"].ToString();
+
+        @:labels2.push("Thiết bị " + "@idDevice");
+        @:values2.push(@Convert.ToDouble(row["avg_minutes"]));
+    }
+
+    const ctx2 = document.getElementById('avgRepairTimeChart').getContext('2d');
+    const avgRepairChart = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: labels2,
+            datasets: [{
+                label: 'Thời gian sửa trung bình (phút)',
+                data: values2,
+                backgroundColor: 'rgba(255, 159, 64, 0.6)',
+                borderColor: 'rgba(255, 159, 64, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let value = context.parsed.y;
+                            if (value < 1440) {
+                                return value + ' phút (' + (value / 60).toFixed(2) + ' giờ)';
+                            } else {
+                                return value + ' phút (' + (value / 1440).toFixed(2) + ' ngày)';
+                            }
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Phút'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Thiết bị'
+                    }
+                }
+            }
+        }
+    });
+</script>
+

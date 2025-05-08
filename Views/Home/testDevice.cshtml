@@ -1,0 +1,126 @@
+﻿@{
+    Layout ="~/Views/Shared/_LayoutHome.cshtml" ;
+    var devices = ViewData["Devices"] as System.Data.DataTable;
+    var areas = ViewData["Areas"] as System.Data.DataTable;
+}
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+<!-- Nút Thêm Thiết Bị -->
+<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDeviceModal">Thêm Thiết Bị</button>
+
+<!-- Bảng Thiết Bị -->
+<table class="table table-striped mt-3">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tên Thiết Bị</th>
+            <th>Trạng Thái</th>
+            <th>Tên Phòng</th>
+            <th>Dãy</th>
+            <th>Mã Vạch</th>
+            <th>Hành Động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (System.Data.DataRow row in devices.Rows)
+        {
+            <tr>
+                <td>@row["device_id"]</td>
+                <td>@row["device_name"]</td>
+                <td>@row["status"]</td>
+                <td>@row["room_name"]</td>
+                <td>@row["area_name"]</td>
+                <td>
+                    <a href="@Url.Action("DeviceCode", "Device", new { id = row["device_id"] })" class="btn btn-secondary">Xem mã vạch</a>
+                </td>
+                <td>
+                    <a href="@Url.Action("DeleteDevice", "Home", new { id = row["device_id"] })" class="btn btn-danger">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal Thêm Thiết Bị -->
+<div class="modal fade" id="addDeviceModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm Thiết Bị</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="@Url.Action("AddDevice", "Home")">
+                    <div class="mb-3">
+                        <label class="form-label">Tên Thiết Bị:</label>
+                        <input type="text" name="name" class="form-control" required />
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Trạng Thái:</label>
+                        <select name="status" class="form-select">
+                            <option value="Hoạt động">Hoạt động</option>
+                            <option value="Hỏng">Hỏng</option>
+                            <option value="Đang sửa">Đang sửa</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Chọn Dãy:</label>
+                        <select id="areaSelect" name="areaId" class="form-select">
+                            <option value="">-- Chọn Dãy --</option>
+                            @foreach (System.Data.DataRow area in areas.Rows)
+                            {
+                                <option value="@area["id"]">@area["name"]</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Chọn Phòng:</label>
+                        <select name="roomId" id="roomSelect" class="form-select" required>
+                            <option value="">-- Chọn Phòng --</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">Thêm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery & Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    console.log("Trang đã tải xong!");
+
+    $('#areaSelect').change(function() {
+        let areaId = $(this).val();
+        console.log("Dãy được chọn: " + areaId);
+
+        if (areaId) {
+            $.getJSON('@Url.Action("GetRooms", "Home")', { areaId: areaId })
+            .done(function(data) {
+                console.log("Dữ liệu nhận từ server:", data);
+
+                $('#roomSelect').empty().append('<option value="">-- Chọn Phòng --</option>');
+                $.each(data, function(i, room) {
+                    $('#roomSelect').append('<option value="' + room.id + '">' + room.name + '</option>');
+                });
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                console.error("Lỗi khi gọi API:", textStatus, errorThrown);
+                console.log("Chi tiết lỗi:", jqXHR.responseText);
+            });
+        } else {
+            $('#roomSelect').empty().append('<option value="">-- Chọn Phòng --</option>');
+        }
+    });
+});
+</script>

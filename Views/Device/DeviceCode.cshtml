@@ -1,0 +1,56 @@
+﻿@model System.Data.DataTable
+
+@{
+    ViewBag.Title = "Mã thiết bị";
+
+}
+
+<h2>Thông tin thiết bị</h2>
+
+@if (Model.Rows.Count > 0)
+{
+    var device = Model.Rows[0];
+
+    <table class="table table-bordered">
+        <tr>
+            <th>ID</th>
+            <td>@device["id"]</td>
+        </tr>
+        <tr>
+            <th>Tên thiết bị</th>
+            <td>@device["name"]</td>
+        </tr>
+        <tr>
+            <th>Trạng thái</th>
+            <td>@device["status"]</td>
+        </tr>
+        <tr>
+            <th>Phòng</th>
+            <td>@device["id_room"]</td>
+        </tr>
+        <tr>
+            <th>Mã thiết bị</th>
+            <td>@device["device_code"]</td>
+        </tr>
+    </table>
+
+    <h3>Mã QR của thiết bị</h3>
+
+    if (ViewBag.BarcodeImage != null)
+    {
+        <img src="@ViewBag.BarcodeImage" alt="QRCode" style="margin-bottom:10px; width:250px;" />
+        <br />
+        <!-- Link giả lập hành vi quét QR -->
+        <a href="@Url.Action("ShowDeviceInfo", "Device", new { deviceCode = device["device_code"] })" class="btn btn-primary">
+            Quét mã → Xem thông tin thiết bị
+        </a>
+    }
+    else
+    {
+        <p>Không thể tạo mã QR.</p>
+    }
+}
+else
+{
+    <p>Không tìm thấy thiết bị.</p>
+}

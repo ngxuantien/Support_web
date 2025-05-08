@@ -1,0 +1,168 @@
+﻿@model System.Data.DataTable
+@{
+    Layout ="~/Views/Shared/_LayoutHome.cshtml" ;
+    int stt = 1;
+}
+
+<div class="main-content">
+
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="card card-stats">
+                            <div class="card-header">
+                                <div class="icon icon-warning">
+                                    <span class="material-icons">equalizer</span>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <p class="category"><strong>Tổng số thiết bị</strong></p>
+                                <h3 class="card-title">@ViewBag.DeviceCount</h3>
+                            </div>
+                            <div class="card-footer">
+                                <div class="stats">
+                                    <i class="material-icons text-info">info</i>
+                                    <a href="@Url.Action("testDevice","Home")">Xem báo cáo chi tiết</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="card card-stats">
+                            <div class="card-header">
+                                <div class="icon icon-maintenance">
+                                    <span class="material-icons">build</span>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <p class="category"><strong>thiết bị cần sửa</strong></p>
+                                <h3 class="card-title">@ViewBag.ErrorDevice</h3>
+                            </div>
+                            <div class="card-footer">
+                                <div class="stats">
+                                    <i class="material-icons text-info">info</i>
+                                    <a href="@Url.Action("Division","Home")">Xem báo cáo chi tiết</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="card card-stats">
+                            <div class="card-header">
+                                <div class="icon icon-warning">
+                                    <span class="material-icons">equalizer</span>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <p class="category"><strong>đã sửa tháng này</strong></p>
+                                <h3 class="card-title">@ViewBag.Corrected</h3>
+                            </div>
+                            <div class="card-footer">
+                                <div class="stats">
+                                    <i class="material-icons">date_range</i> Xem lịch sử
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="card card-stats">
+                            <div class="card-header">
+                                <div class="icon icon-warning">
+                                    <span class="material-icons">equalizer</span>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <p class="category"><strong>So sánh tháng trước</strong></p>
+                                <h3 class="card-title">@ViewBag.CorrectedBefore</h3>
+                            </div>
+                            <div class="card-footer">
+                                <div class="stats">
+                                    <i class="material-icons">update</i> Xem chi tiết
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                     <div class="col-12">
+                         <div class="card" style="min-height: 485px">
+                             <div class="card-header card-header-text">
+                                 <h4 class="card-title">Lịch sử sửa chữa</h4>
+                                 <p class="category">Hôm nay, @DateTime.Now.ToString("dd 'tháng' MM 'năm' yyyy")</p>
+                             </div>
+
+                             <div class="card-content table-responsive">
+                                 <table class="table table-hover">
+                                     <thead class="text-primary">
+                                         <tr>
+                                             <th style="width: 5%">STT</th>
+                                             <th style="width: 13%">Thiết bị</th>
+                                             <th style="width: 12%">Dãy</th>
+                                             <th style="width: 12%">Phòng</th>
+                                             <th style="width: 30%">Mô tả</th>
+                                             <th style="width: 15%">Thời gian</th>
+                                             <th style="width: 33%">Nhóm thực hiện</th>
+                                         </tr>
+                                     </thead>
+                                     <tbody>
+                                         @foreach (System.Data.DataRow row in Model.Rows)
+                                         {
+                                             <tr>
+                                                 <td>@stt</td>
+                                                 <td>@row["device_name"]</td>
+                                                 <td>@row["area_name"]</td>
+                                                 <td>@row["room_name"]</td>
+                                                 <td>@row["description"]</td>
+                                                 <td class="text-nowrap">@Convert.ToDateTime(row["time_repair"]).ToString("dd/MM/yyyy HH:mm")</td>
+                                                 <td>@row["name_group"]</td>
+                                             </tr>
+                                             stt ++;
+                                         }
+                                     </tbody>
+                                 </table>
+                             </div>
+                         </div>
+                    </div>                   
+                </div>
+
+                <footer class="footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <nav class="d-flex">
+                                    <ul class="m-0 p-0">
+                                        <li>
+                                            <a href="#">
+                                                Home
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                Company
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                Portfolio
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                Blog
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+
+                            </div>
+                            <!-- <div class="col-md-6">
+                                <p class="copyright d-flex justify-content-end"> &copy 2021 Design by
+                                    <a href="#">Vishweb Design</a> BootStrap Admin Dashboard
+                                </p>
+                            </div> -->
+                        </div>
+                    </div>
+                </footer>
+
+            </div>

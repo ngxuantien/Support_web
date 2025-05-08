@@ -1,0 +1,12 @@
+﻿@{
+    var reports = ViewData["Status"] as System.Data.DataTable;
+}
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+    <span class="material-icons">notifications</span>
+    <span class="notification">@ViewBag.ReportCount</span>
+</a>
+ <ul class="dropdown-menu">
+       @foreach (System.Data.DataRow row in reports.Rows){
+      <li><a class="dropdown-item" href="@Url.Action("Division", "Home")">@row["description"]</a></li>
+       }
+ </ul>

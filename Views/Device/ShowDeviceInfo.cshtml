@@ -1,0 +1,27 @@
+﻿@model System.Data.DataTable
+
+@{
+    ViewBag.Title = "Thông tin thiết bị sau khi quét";
+}
+
+<h2>Thông tin thiết bị sau khi quét</h2>
+
+@if (Model.Rows.Count > 0)
+{
+    var device = Model.Rows[0];
+
+    <table class="table table-striped">
+        <tr>
+            <th>Tên thiết bị</th>
+            <td>@device["name"]</td>
+        </tr>
+        <tr>
+            <th>Phòng</th>
+            <td>@device["id_room"]</td>
+        </tr>
+    </table>
+}
+else
+{
+    <p>Không tìm thấy thiết bị với mã đã quét.</p>
+}

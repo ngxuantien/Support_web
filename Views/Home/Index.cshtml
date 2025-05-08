@@ -1,0 +1,21 @@
+﻿@model System.Data.DataTable
+@{
+    ViewBag.Title = "Danh sách Users";
+}
+
+<h2>Danh sách Users</h2>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Password</th>
+    </tr>
+    @foreach (System.Data.DataRow row in Model.Rows)
+    {
+        <tr>
+            <td>@row["id"]</td>
+            <td>@row["name"]</td>
+            <td>@row["pass"]</td>
+        </tr>
+    }
+</table>
